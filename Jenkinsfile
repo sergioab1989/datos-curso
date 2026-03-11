@@ -1,21 +1,12 @@
 pipeline {
-    agent { label 'nodejs' }
-
-    stages{
-        stage('Test'){
+    agent { node { label 'maven' } }
+    environment { APP_NAMESPACE = 'RHT_OCP4_DEV_USER-recover' }
+    stages {
+        stage('Test') {
             steps {
-                dir('greeting-cd-pipeline') {
-                    sh "node test.js"
+                dir('shopping-cart-v2') {
+                    sh './mvnw clean test'
                 }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh '''
-                    oc start-build greeting-metrics \
-                    --follow --wait -n RHT_OCP4_DEV_USER-metrics
-                '''
             }
         }
     }
